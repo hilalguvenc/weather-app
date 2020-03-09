@@ -2,16 +2,27 @@ import React, { useState, useEffect } from "react";
 
 function WeatherContainer() {
   const [countries, setCountries] = useState([]);
+  const [coordinates, setCoordinates] = useState([]);
 
   const getCountries = async () => {
-    const response = await fetch(
-      `https://restcountries.eu/rest/v2/all?fields=name`
-    );
+    const response = await fetch(`https://restcountries.eu/rest/v2/all`);
     const json = await response.json();
     setCountries(json);
+    console.log(json);
+  };
+  const getCoordinates = async () => {
+    const response = await fetch(
+      `https://api.opencagedata.com/geocode/v1/json?q=$capital&key=60cc6b02d2b241aea26852a4fe7a18a6`
+    );
+    const json = await response.json();
+    setCoordinates(json.results);
+    console.log(json.results);
   };
   useEffect(() => {
     getCountries();
+  }, []);
+  useEffect(() => {
+    getCoordinates();
   }, []);
   return (
     <div className="weather-container">
@@ -20,7 +31,11 @@ function WeatherContainer() {
         <div>
           <ul>
             {countries.map((country, index) => {
-              return <li key={index}>{country.name}</li>;
+              return (
+                <li key={index}>
+                  <button>{country.name}</button>
+                </li>
+              );
             })}
           </ul>
         </div>
