@@ -1,13 +1,14 @@
-import React ,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 function WeatherContainer() {
   const [countries, setCountries] = useState([]);
 
   const getCountries = async () => {
-    const response = await fetch(`https://restcountries.eu/rest/v2/all`);
+    const response = await fetch(
+      `https://restcountries.eu/rest/v2/all?fields=name`
+    );
     const json = await response.json();
-    setCountries(json[0]);
-    console.log(json)
+    setCountries(json);
   };
   useEffect(() => {
     getCountries();
@@ -17,8 +18,12 @@ function WeatherContainer() {
       <header className="weather-header">
         <h3>Weather</h3>
         <div>
-          <p>{countries.name}</p>
-          </div>
+          <ul>
+            {countries.map((country, index) => {
+              return <li key={index}>{country.name}</li>;
+            })}
+          </ul>
+        </div>
       </header>
     </div>
   );
