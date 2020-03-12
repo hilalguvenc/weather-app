@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { format, addDays } from "date-fns";
+import { weatherApi, countryApi } from "../constants";
 
 function WeatherContainer() {
   const [countries, setCountries] = useState([]);
-  const [coordinates, setCoordinates] = useState([]);
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
-  const [dailyWeather, setDailyWeather] = useState(0);
-  const [weeklyWeather, setWeeklyWeather] = useState(0);
   const [startDate, setStartDate] = useState(0);
 
-  const weatherApi = process.env.REACT_APP_WEATHER_API_KEY;
+  const weatherApiKey = process.env.REACT_APP_WEATHER_API_KEY;
 
   const getCountries = async () => {
-    const response = await fetch(`https://restcountries.eu/rest/v2/all`);
+    const response = await fetch(`${countryApi}`);
     const json = await response.json();
     setCountries(json);
     console.log(json);
@@ -34,10 +32,9 @@ function WeatherContainer() {
     const strtdate = format(startDate, "yyyy-MM-dd");
     const enddt = format(addDays(startDate, 1), "yyyy-MM-dd");
     const response = await fetch(
-      `https://api.weatherbit.io/v2.0/history/daily?lat=${lat}&lon=${lon}&start_date=${strtdate}&end_date=${enddt}&key=${weatherApi}`
+      `${weatherApi}/history/daily?lat=${lat}&lon=${lon}&start_date=${strtdate}&end_date=${enddt}&key=${weatherApiKey}`
     );
     const json = await response.json();
-    setDailyWeather(json);
     console.log(json);
   };
   useEffect(() => {
